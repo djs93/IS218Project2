@@ -16,3 +16,24 @@ function validate_login($email, $password){
         return false;
     }
 }
+
+function add_user($email, $fname, $lname, $birthday, $password){
+    global $db;
+    $query = 'INSERT INTO `accounts` (`email`, `fname`, `lname`, `birthday`, `password`) 
+                        VALUES(:email, :fname, :lname, :bday, :password)';
+    $statement = $db->prepare($query);
+    $statement->bindValue(':email', $email);
+    $statement->bindValue(':fname', $fname);
+    $statement->bindValue(':lname', $lname);
+    $statement->bindValue(':bday', $birthday);
+    $statement->bindValue(':password', $password);
+    $statement->execute();
+    $user = $statement->fetch();
+    $statement->closeCursor();
+
+    if (count($user)>0){
+        return $user['id'];
+    } else {
+        return false;
+    }
+}
