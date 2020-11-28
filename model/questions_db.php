@@ -15,10 +15,12 @@ function get_users_questions ($userId){
 function create_question ($title, $body, $skills, $userId){
     global $db;
 
+    $currDate = date('Y-m-d');
+
     $query = 'INSERT INTO questions
-                (title, body, skills, ownerid)
+                (title, body, skills, ownerid, createddate)
               VALUES 
-                (:title, :body, :skills, :ownerid)';
+                (:title, :body, :skills, :ownerid, now())';
     $statement = $db->prepare($query);
     $statement->bindValue(':ownerid', $userId);
     $statement->bindValue(':skills', $skills);
