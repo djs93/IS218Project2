@@ -15,8 +15,6 @@ function get_users_questions ($userId){
 function create_question ($title, $body, $skills, $userId){
     global $db;
 
-    $currDate = date('Y-m-d');
-
     $query = 'INSERT INTO questions
                 (title, body, skills, ownerid, createddate)
               VALUES 
