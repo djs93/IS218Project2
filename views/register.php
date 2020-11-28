@@ -11,28 +11,40 @@
         <div class="h3 mt-5 font-weight-normal">
             <label for="fname">First Name</label>
             <br>
-            <input id="fname" name="fname" type="text">
+            <input id="fname" name="fname" type="text" <?php
+            if(!empty($fname)){
+                echo("value=$fname");
+            }?>>
             <br>
         </div>
 
         <div class="h3 mt-2 font-weight-normal">
             <label for="lname">Last Name</label>
             <br>
-            <input id="lname" name="lname" type="text">
+            <input id="lname" name="lname" type="text" <?php
+            if(!empty($lname)){
+                echo("value=$lname");
+            }?>>
             <br>
         </div>
 
         <div class="h3 mt-5 font-weight-normal">
             <label for="bday">Birthday</label>
             <br>
-            <input id="bday" name="bday" type="date">
+            <input id="bday" name="bday" type="date" <?php
+            if(!empty($bday)){
+                echo("value=$bday");
+            }?>>
             <br>
         </div>
 
         <div class="h3 mt-5 font-weight-normal">
             <label for="email">Email Address</label>
             <br>
-            <input id="email" name="email" type="text">
+            <input id="email" name="email" type="text" <?php
+                if(!empty($email)){
+                    echo("value=$email");
+                }?>>
             <br>
         </div>
 
