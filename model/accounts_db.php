@@ -28,6 +28,13 @@ function add_user($email, $fname, $lname, $birthday, $password){
     $statement->bindValue(':bday', $birthday);
     $statement->bindValue(':password', $password);
     $statement->execute();
+    $statement->closeCursor();
+
+    $query = 'SELECT * FROM accounts WHERE email = :email AND password = :password';
+    $statement = $db->prepare($query);
+    $statement->bindValue(':email', $email);
+    $statement->bindValue(':password', $password);
+    $statement->execute();
     $user = $statement->fetch();
     $statement->closeCursor();
 
