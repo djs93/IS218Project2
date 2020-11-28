@@ -37,3 +37,19 @@ function add_user($email, $fname, $lname, $birthday, $password){
         return false;
     }
 }
+
+function validate_register($email){
+    global $db;
+    $query = 'SELECT * FROM accounts WHERE email = :email';
+    $statement = $db->prepare($query);
+    $statement->bindValue(':email', $email);
+    $statement->execute();
+    $account = $statement->fetch();
+    $statement->closeCursor();
+
+    if (count($account)>0){
+        return false;
+    } else {
+        return true;
+    }
+}
