@@ -8,7 +8,14 @@
 <body class="text-center mt-4">
     <h1 class="h1 mb-3 font-weight-bold">Login</h1>
     <form action="login_post.php" method="post">
-        <div class="h3 mt-5 font-weight-normal">
+        <div class="container alert alert-danger justify-content-center col-1" role="alert" <?php
+            if($hasLogonError!=true){
+                echo('style="display: none;"');
+            }
+        ?>>
+            Invalid Login!
+        </div>
+        <div class="h3 mt-3 font-weight-normal">
             <label for="email">Email Address</label>
             <br>
             <input id="email" name="email" type="text">
