@@ -45,7 +45,7 @@ function add_user($email, $fname, $lname, $birthday, $password){
     }
 }
 
-function validate_register($email){
+function check_registered($email){
     global $db;
     $query = 'SELECT * FROM accounts WHERE email = :email';
     $statement = $db->prepare($query);
@@ -54,7 +54,7 @@ function validate_register($email){
     $account = $statement->fetch();
     $statement->closeCursor();
 
-    if (count($account)>0){
+    if (empty($account)){
         return false;
     } else {
         return true;
