@@ -10,6 +10,13 @@
     <form action="index.php" method="post">
         <input id="action" name="action" value="verify_registration" type="hidden">
         <div class="mt-3 container alert alert-danger justify-content-center col-1" role="alert" <?php
+        if(!$emailExistsAlready){
+            echo('style="display: none;"');
+        }
+        ?>>
+            <p>Email already registered!</p>
+        </div>
+        <div class="mt-3 container alert alert-danger justify-content-center col-1" role="alert" <?php
         if(empty($fnameError)){
             echo('style="display: none;"');
         }
