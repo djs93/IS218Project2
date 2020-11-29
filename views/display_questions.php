@@ -1,4 +1,4 @@
-<?php include('abstract-views/header.php');?>
+<?php //include('abstract-views/header.php');?>
 
 <a href=".?action=display_question_form&userId=<?php echo $userId;?>">Add Question</a>
 
@@ -15,4 +15,4 @@
     <?php endforeach; ?>
 </table>
 
-<?php include('abstract-views/footer.php');?>
+<?php //include('abstract-views/footer.php');?>
