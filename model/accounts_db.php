@@ -60,3 +60,15 @@ function check_registered($email){
         return true;
     }
 }
+
+function get_user_info($userId){
+    global $db;
+    $query = 'SELECT * FROM accounts WHERE id = :id';
+    $statement = $db->prepare($query);
+    $statement->bindValue(':id', $userId);
+    $statement->execute();
+    $account = $statement->fetch();
+    $statement->closeCursor();
+
+    return $account;
+}
