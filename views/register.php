@@ -7,8 +7,19 @@
 </head>
 <body class="text-center mt-4">
     <h1 class="h1 mb-3 font-weight-bold">Register</h1>
-    <form action="../register_post.php" method="post">
-        <div class="h3 mt-5 font-weight-normal">
+    <form action="index.php" method="post">
+        <input id="action" name="action" value="verify_registration" type="hidden">
+        <div class="mt-3 container alert alert-danger justify-content-center col-1" role="alert" <?php
+        if(empty($fnameError)){
+            echo('style="display: none;"');
+        }
+        ?>>
+            <?php if(!empty($fnameError)){
+                echo($fnameError);
+            }
+            ?>
+        </div>
+        <div class="h3 mt-3 font-weight-normal">
             <label for="fname">First Name</label>
             <br>
             <input id="fname" name="fname" type="text" <?php
@@ -18,6 +29,16 @@
             <br>
         </div>
 
+        <div class="mt-3 container alert alert-danger justify-content-center col-1" role="alert" <?php
+        if(empty($lnameError)){
+            echo('style="display: none;"');
+        }
+        ?>>
+            <?php if(!empty($lnameError)){
+                echo($lnameError);
+            }
+            ?>
+        </div>
         <div class="h3 mt-2 font-weight-normal">
             <label for="lname">Last Name</label>
             <br>
@@ -28,6 +49,16 @@
             <br>
         </div>
 
+        <div class="mt-3 container alert alert-danger justify-content-center col-1" role="alert" <?php
+        if(empty($bdayError)){
+            echo('style="display: none;"');
+        }
+        ?>>
+            <?php if(!empty($bdayError)){
+                echo($bdayError);
+            }
+            ?>
+        </div>
         <div class="h3 mt-5 font-weight-normal">
             <label for="bday">Birthday</label>
             <br>
@@ -38,6 +69,16 @@
             <br>
         </div>
 
+        <div class="mt-3 container alert alert-danger justify-content-center col-1" role="alert" <?php
+        if(empty($emailError)){
+            echo('style="display: none;"');
+        }
+        ?>>
+            <?php if(!empty($emailError)){
+                echo($emailError);
+            }
+            ?>
+        </div>
         <div class="h3 mt-5 font-weight-normal">
             <label for="email">Email Address</label>
             <br>
@@ -48,6 +89,16 @@
             <br>
         </div>
 
+        <div class="mt-3 container alert alert-danger justify-content-center col-1" role="alert" <?php
+        if(empty($passwordError)){
+            echo('style="display: none;"');
+        }
+        ?>>
+            <?php if(!empty($passwordError)){
+                echo($passwordError);
+            }
+            ?>
+        </div>
         <div class="h3 mt-2 font-weight-normal">
             <label for="password">Password</label>
             <br>
