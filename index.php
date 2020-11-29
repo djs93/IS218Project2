@@ -12,12 +12,13 @@ if ($action == NULL) {
 }
 
 switch ($action) {
-    case 'display_login': {
+    case 'display_login':{
         include('views/login.php');
         break;
     }
 
     case 'display_login_errored': {
+        echo("Displaying errored");
         $hasLogonError = true;
         include('views/login.php');
         break;
@@ -44,16 +45,21 @@ switch ($action) {
             $error .= "Password is empty.<br>";
             $hasPasswordError = true;
         }
-        if(strlen($password)<8){
-            $error .= "Password must be at least 8 characters!<br>";
-            $hasPasswordError = true;
-        }
+        //if(strlen($password)<8){
+            //$error .= "Password must be at least 8 characters!<br>";
+            //$hasPasswordError = true;
+        //}
         if($hasEmailError == true || $hasPasswordError == true){
-            header('Location: .?action=display_login_errored');
+            if(!empty($email)){
+                header("Location: .?action=display_login_errored&email=$email");
+            }
+            else{
+                header('Location: .?action=display_login_errored');
+            }
         } else {
             $userId = validate_login($email, $password);
             if($userId==false){
-                header("Location: .?action=display_registration_filled&email=$email");
+                header("Location: .?action=display_login_errored&email=$email");
             }
             else {
                 header("Location: .?action=display_questions&userId=$userId");
@@ -82,6 +88,11 @@ switch ($action) {
         $fname = filter_input(INPUT_GET, 'fname', FILTER_DEFAULT);
         $lname = filter_input(INPUT_GET, 'lname', FILTER_DEFAULT);
         $bday = filter_input(INPUT_GET, 'bday', FILTER_DEFAULT);
+        $emailError = filter_input(INPUT_GET, 'emailError', FILTER_DEFAULT);
+        $passwordError = filter_input(INPUT_GET, 'passwordError', FILTER_DEFAULT);
+        $fnameError = filter_input(INPUT_GET, 'fnameError', FILTER_DEFAULT);
+        $lnameError = filter_input(INPUT_GET, 'lnameError', FILTER_DEFAULT);
+        $bdayError = filter_input(INPUT_GET, 'bdayError', FILTER_DEFAULT);
         $invalidRegFields = true;
         include('views/register.php');
         break;
@@ -104,7 +115,11 @@ switch ($action) {
         $lname = filter_input(INPUT_POST, 'lname', FILTER_DEFAULT);
         $bday = filter_input(INPUT_POST, 'bday', FILTER_DEFAULT);
 
-        $error = "";
+        $emailError = "";
+        $passwordError = "";
+        $fnameError = "";
+        $lnameError = "";
+        $bdayError = "";
         $hasEmailError = false;
         $hasPasswordError = false;
         $hasFnameError = false;
@@ -112,43 +127,72 @@ switch ($action) {
         $hasBdayError = false;
 
         if(empty($email)){
-            $error .= "Email is empty.<br>";
+            $emailError .= "Email is empty.<br>";
             $hasEmailError = true;
         }
         else if(strpos($email, '@')===false){
-            $error .= "Email must include @!<br>";
+            $emailError .= "Email must include @!<br>";
             $hasEmailError = true;
         }
 
         if(empty($password)){
-            $error .= "Password is empty.<br>";
+            $passwordError .= "Password is empty.<br>";
             $hasPasswordError = true;
         }
-        if(strlen($password)<8){
-            $error .= "Password must be at least 8 characters!<br>";
+        else if(strlen($password)<8){
+            $passwordError .= "Password must be at least 8 characters!<br>";
             $hasPasswordError = true;
         }
 
         if(empty($fname)){
-            $error .= "First name is empty.<br>";
+            $fnameError .= "First name is empty.<br>";
             $hasFnameError = true;
         }
 
         if(empty($lname)){
-            $error .= "Last name is empty.<br>";
+            $lnameError .= "Last name is empty.<br>";
             $hasLnameError = true;
         }
 
         if(empty($bday)){
-            $error .= "Birthday is empty.<br>";
+            $bdayError .= "Birthday is empty.<br>";
             $hasBdayError = true;
         }
 
         if($hasEmailError == true || $hasPasswordError == true || $hasFnameError == true || $hasLnameError == true || $hasBdayError == true){
-            header("Location: .?action=display_registration_errored&email=$email&fname=$fname&lname=$lname&bday=$bday");
+            $loc = "Location: .?action=display_registration_errored";
+            if(!empty($email)){
+                $loc .= "&email=$email";
+            }
+            if(!empty($fname)){
+                $loc .= "&fname=$fname";
+            }
+            if(!empty($lname)){
+                $loc .= "&lname=$lname";
+            }
+            if(!empty($bday)){
+                $loc .= "&bday=$bday";
+            }
+
+            if(!empty($hasEmailError)){
+                $loc .= "&emailError=$emailError";
+            }
+            if(!empty($hasPasswordError)){
+                $loc .= "&passwordError=$passwordError";
+            }
+            if(!empty($hasFnameError)){
+                $loc .= "&fnameError=$fnameError";
+            }
+            if(!empty($hasLnameError)){
+                $loc .= "&lnameError=$lnameError";
+            }
+            if(!empty($hasBdayError)){
+                $loc .= "&bdayError=$bdayError";
+            }
+            header($loc);
         } else {
-            $userValid = validate_register($email, $password);
-            if($userValid==false){
+            $userValid = check_registered($email);
+            if($userValid==true){
                 header("Location: .?action=display_registration_already_exists&email=$email&fname=$fname&lname=$lname&bday=$bday");
             }
             else {
@@ -169,7 +213,7 @@ switch ($action) {
         if($userId == NULL || $userId < 0){
             header('Location: .?action=display_login');
         } else{
-            $questions = get_user_questions($userId);
+            $questions = get_users_questions($userId);
             include('views/display_questions.php');
         }
         break;
@@ -177,6 +221,9 @@ switch ($action) {
 
     case 'display_question_form':{
         $userId = filter_input(INPUT_GET, 'userId');
+        if(empty($userId) || $userId<0){
+            $userId = filter_input(INPUT_POST, 'userId');
+        }
         if($userId == NULL || $userId <0){
             header('Location: .?action=display_login');
         } else{
@@ -186,7 +233,13 @@ switch ($action) {
     }
 
     case 'display_question_form_errored':{
-        $userId = filter_input(INPUT_GET, 'userId');
+        $userId = filter_input(INPUT_POST, 'userId');
+        if(empty($userId) || $userId<0){
+            $userId = filter_input(INPUT_GET, 'userId');
+        }
+        $nameError = filter_input(INPUT_GET, 'nameError');
+        $bodyError = filter_input(INPUT_GET, 'bodyError');
+        $skillsError = filter_input(INPUT_GET, 'skillsError');
         if($userId == NULL || $userId <0){
             header('Location: .?action=display_login');
         } else{
@@ -210,11 +263,11 @@ switch ($action) {
         $hasBodyError = "";
         $hasSkillsError = "";
 
-        if(empty($name)){
+        if(empty($title)){
             $nameError .= "Question cannot be empty.";
             $hasNameError = true;
         }
-        else if(strlen($name)<3){
+        else if(strlen($title)<3){
             $nameError .= "Question name must be at least 3 characters!";
             $hasNameError = true;
         }
@@ -223,7 +276,7 @@ switch ($action) {
             $bodyError .= "Question Body cannot be empty.";
             $hasBodyError = true;
         }
-        if(strlen($body)>=500){
+        else if(strlen($body)>=500){
             $bodyError .= "Question body must be less than 500 characters!";
             $hasBodyError = true;
         }
@@ -238,10 +291,10 @@ switch ($action) {
                 $loc .= "&nameError=$nameError";
             }
             if($hasBodyError){
-                $loc .= "&nameError=$bodyError";
+                $loc .= "&bodyError=$bodyError";
             }
             if($hasSkillsError){
-                $loc .= "&nameError=$skillsError";
+                $loc .= "&skillsError=$skillsError";
             }
             header($loc);
         } else{
@@ -252,7 +305,7 @@ switch ($action) {
     }
 
     default: {
-        $error = 'Unknown Action';
+        $error = 'Unknown Action '.$action;
         include('errors/error.php');
     }
 }
