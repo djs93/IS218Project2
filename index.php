@@ -24,6 +24,7 @@ switch ($action) {
         break;
     }
 
+    //This is the 'login' case in the project outline
     case 'validate_login':{
         $email = filter_input(INPUT_POST, 'email', FILTER_DEFAULT);
         $password = filter_input(INPUT_POST, 'password', FILTER_DEFAULT);
@@ -68,10 +69,6 @@ switch ($action) {
         break;
     }
 
-    case 'login': {
-        break;
-    }
-
     case 'display_registration':{
         include('views/register.php');
         break;
@@ -108,6 +105,7 @@ switch ($action) {
         break;
     }
 
+    //This is the 'register' case in the project outline
     case 'verify_registration':{
         $email = filter_input(INPUT_POST, 'email', FILTER_DEFAULT);
         $password = filter_input(INPUT_POST, 'password', FILTER_DEFAULT);
@@ -219,6 +217,7 @@ switch ($action) {
         break;
     }
 
+    //This is the 'display_new_question' case in the project outline
     case 'display_question_form':{
         $userId = filter_input(INPUT_GET, 'userId');
         if(empty($userId) || $userId<0){
@@ -248,6 +247,7 @@ switch ($action) {
         break;
     }
 
+    //This is the 'create_new_question' case in the project outline
     case 'submit_question':{
         $userId = filter_input(INPUT_POST, 'userId');
         $title = filter_input(INPUT_POST, 'name', FILTER_DEFAULT);
@@ -301,6 +301,33 @@ switch ($action) {
             create_question($title, $body, $skills, $userId);
             header("Location: .?action=display_questions&userId=$userId");
         }
+        break;
+    }
+
+    case 'display_edit_question':{
+        #todo: write this function
+        $userId = filter_input(INPUT_POST, 'userId');
+        if(empty($userId) || $userId<0){
+            $userId = filter_input(INPUT_GET, 'userId');
+        }
+        $nameError = filter_input(INPUT_GET, 'nameError');
+        $bodyError = filter_input(INPUT_GET, 'bodyError');
+        $skillsError = filter_input(INPUT_GET, 'skillsError');
+        if($userId == NULL || $userId <0){
+            header('Location: .?action=display_login');
+        } else{
+            include('views/new_question.php');
+        }
+        break;
+    }
+
+    case 'edit_question':{
+        #todo: write this function
+        break;
+    }
+
+    case 'delete_question':{
+        #todo: write this function
         break;
     }
 
